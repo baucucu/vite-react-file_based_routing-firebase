@@ -1,9 +1,10 @@
-import React from "react";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import React, { useEffect } from "react";
+import { GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "firebase/auth";
 import { auth, provider } from "../firebase-config";
 import { useNavigate } from "react-router";
 
 function AuthPage() {
+  const navigate = useNavigate();
   const signInWithGoogle = () => {
     signInWithPopup(auth, provider)
       .then((result) => {
@@ -15,7 +16,7 @@ function AuthPage() {
         // You can now use this info and store it in state or context.
         console.log({ user, token });
         // redirect to dashboard
-        // navigate("/dashboard");
+        navigate("/dashboard");
         
       })
       .catch((error) => {
@@ -31,6 +32,17 @@ function AuthPage() {
       });
   };
 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      console.log("Auth state changed. Current user: ", user);
+      if (user) {
+        navigate("/dashboard");
+      }
+    });
+
+    // Cleanup the subscription on unmount
+    return () => unsubscribe();
+  }, [navigate]);
   return (
     <div>
       <h1>Authentication</h1>

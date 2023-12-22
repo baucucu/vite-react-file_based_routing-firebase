@@ -3,7 +3,7 @@ import {
   } from 'react-router-dom';
 
 import AuthWrapper from '../../utils/AuthWrapper';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { getAuth } from 'firebase/auth';
 
 function Page() {
     const navigate = useNavigate()
